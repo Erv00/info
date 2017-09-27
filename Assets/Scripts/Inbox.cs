@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Inbox : MonoBehaviour {
 
-    int[] inbox;
+    BoxElement[] inbox;
     #region basic
     // Use this for initialization
     void Start () {
@@ -19,17 +19,18 @@ public class Inbox : MonoBehaviour {
     #endregion
 
 
-    private int[] GenerateNumericInbox(int length,int min,int max)
+    private BoxElement[] GenerateNumericInbox(int length,int min,int max)
     {
-        Random r = new Random();
-        int[] tmp = new int[length];
+        BoxElement[] tmp = new BoxElement[length];
         for(int i = 0; i < length; i++)
         {
-            tmp[i] = Random.Range(min, max + 1);
+            tmp[i] = new BoxElement(Random.Range(min, max + 1));
         }
-        PrintArray(tmp);
+        //PrintArray(tmp);
         return(tmp);
     }
+
+
 
     #region debug
     private void PrintArray(int[] arr)
