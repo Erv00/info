@@ -5,6 +5,8 @@ using UnityEngine.EventSystems;
 public class Draggable : MonoBehaviour, IBeginDragHandler,IDragHandler,IEndDragHandler{
     public bool validDrop = false;
     private bool isClone = false;
+    private bool setSib = false;
+    private int sibIndex = 999;
 
     #region basi
     // Use this for initialization
@@ -14,7 +16,11 @@ public class Draggable : MonoBehaviour, IBeginDragHandler,IDragHandler,IEndDragH
 	
 	// Update is called once per frame
 	void Update () {
-		
+        if (setSib)
+        {
+            setSib = false;
+            transform.SetSiblingIndex(sibIndex);
+        }
 	}
     #endregion
 
@@ -70,6 +76,12 @@ public class Draggable : MonoBehaviour, IBeginDragHandler,IDragHandler,IEndDragH
     public void SetClone()
     {
         isClone = true;
+    }
+
+    public void SetSib(int x)
+    {
+        setSib = true;
+        sibIndex = x;
     }
 
 }

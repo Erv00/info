@@ -214,6 +214,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Type: 0
+  doReorder: 0
+  isOver: 0
+  beingDragged: {fileID: 0}
 --- !u!1001 &479680825
 Prefab:
   m_ObjectHideFlags: 0
@@ -269,7 +272,7 @@ Prefab:
     - target: {fileID: 224315461669437546, guid: 12765948ea97e5c4dbe374937744f989,
         type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: -19.099998
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224315461669437546, guid: 12765948ea97e5c4dbe374937744f989,
         type: 2}
@@ -326,6 +329,16 @@ Prefab:
         type: 2}
       propertyPath: validDrop
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114196010375790804, guid: 12765948ea97e5c4dbe374937744f989,
+        type: 2}
+      propertyPath: m_MinWidth
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114196010375790804, guid: 12765948ea97e5c4dbe374937744f989,
+        type: 2}
+      propertyPath: m_MinHeight
+      value: -1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 12765948ea97e5c4dbe374937744f989, type: 2}
@@ -385,7 +398,7 @@ Prefab:
     - target: {fileID: 224796294387541458, guid: beccd6f10c775eb479de203f43859a88,
         type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: -57.299995
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224796294387541458, guid: beccd6f10c775eb479de203f43859a88,
         type: 2}
@@ -788,8 +801,8 @@ MonoBehaviour:
   m_Spacing: 0
   m_ChildForceExpandWidth: 1
   m_ChildForceExpandHeight: 0
-  m_ChildControlWidth: 0
-  m_ChildControlHeight: 0
+  m_ChildControlWidth: 1
+  m_ChildControlHeight: 1
 --- !u!114 &2111698102
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -802,3 +815,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Type: 1
+  doReorder: 1
+  isOver: 0
+  beingDragged: {fileID: 0}
