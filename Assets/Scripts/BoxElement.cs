@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 
 public class BoxElement {
-    private int intVal = 0;
     private string strVal = "0";
 
     public BoxElement(string x)
@@ -11,7 +10,7 @@ public class BoxElement {
 
     public BoxElement(int x)
     {
-        SetValue(x);
+        strVal = x.ToString();
     }
 
     public void SetValue(string x)
@@ -19,18 +18,9 @@ public class BoxElement {
         strVal = x[0].ToString();
     }
 
-    public void SetValue(int x)
-    {
-        intVal = Mathf.Clamp(x,-999,999);
-    }
-
-    public int GetValue(int n)
-    {
-        return intVal;
-    }
-
     public string GetValue()
     {
         return strVal;
     }
+
 }
