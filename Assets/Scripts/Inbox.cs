@@ -7,11 +7,31 @@ public class Inbox : MonoBehaviour {
     [SerializeField]
     private GameObject Element = null;
     private int index = 0;
+    public enum InboxType { NUMERIC,ALPHABETIC,ALPHANUMERIC};
+    [SerializeField]
+    private InboxType Type = InboxType.NUMERIC;
+    [SerializeField]
+    private int min = 0;
+    [SerializeField]
+    private int max = 999;
+    [SerializeField]
+    private int length = 10;
 
     #region basic
     // Use this for initialization
     void Awake () {
-        inbox = GenerateAlphanumericInbox(5, -30, 30);
+        switch (Type)
+        {
+            case InboxType.NUMERIC:
+                inbox = GenerateNumericInbox(length, min, max);
+                break;
+            case InboxType.ALPHABETIC:
+                inbox = GenerateAlphabeticInbox(length);
+                break;
+            case InboxType.ALPHANUMERIC:
+                inbox = GenerateAlphanumericInbox(length, min, max);
+                break;
+        }
         PrintArray(inbox);
 
         for(int i = 0; i < inbox.Length; i++)
@@ -81,6 +101,11 @@ public class Inbox : MonoBehaviour {
         index++;
         Destroy(transform.GetChild(0).gameObject);
         return inbox[index - 1];
+    }
+
+    public BoxElement[] GetInbox()
+    {
+        return inbox;
     }
 
     #region debug

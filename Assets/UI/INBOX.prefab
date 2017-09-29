@@ -64,7 +64,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: INBOX
+  m_Text: BEVESZ
 --- !u!114 &114196010375790804
 MonoBehaviour:
   m_ObjectHideFlags: 1

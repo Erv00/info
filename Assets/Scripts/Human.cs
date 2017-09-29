@@ -36,7 +36,9 @@ public class Human : MonoBehaviour {
     {
         try
         {
-            inHand.SetValue((Int32.Parse(inHand.GetValue()) + 1).ToString());
+            int x = Int32.Parse(inHand.GetValue());
+            x = x + 1;
+            inHand.SetValue(x.ToString());
         }
         catch (FormatException)
         {

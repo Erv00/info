@@ -15,7 +15,7 @@ public class BoxElement {
 
     public void SetValue(string x)
     {
-        strVal = x[0].ToString();
+        strVal = x;
     }
 
     public string GetValue()

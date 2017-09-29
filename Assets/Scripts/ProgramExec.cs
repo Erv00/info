@@ -2,12 +2,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ProgramExec : MonoBehaviour {
 
     GameObject[] instructingGameObjs;
-    string[] commands;
     private Human human;
+    private List<string> expected = new List<string>();
+    [SerializeField]
+    BoxElement inHand = null;
 
     void Start()
     {
@@ -22,7 +25,8 @@ public class ProgramExec : MonoBehaviour {
 
     private void Exec()
     {
-        StartCoroutine(Execute());
+        Execute();
+        StartCoroutine(StandartExecute());
     }
 
     private GameObject[] GetChildren()
@@ -36,9 +40,8 @@ public class ProgramExec : MonoBehaviour {
         return tmp;
     }
 
-    IEnumerator Execute()
+    IEnumerator StandartExecute()
     {
-        commands = new string[instructingGameObjs.Length];
         for (int i = 0; i < instructingGameObjs.Length; i++)
         {
             GameObject obj = instructingGameObjs[i];
@@ -52,22 +55,118 @@ public class ProgramExec : MonoBehaviour {
                     human.OUTBOX();
                     break;
                 case Instruction.Instructions.ADD:
-                    break;
+                    throw new System.NotImplementedException();
+                    //break;
                 case Instruction.Instructions.SUB:
                     break;
                 case Instruction.Instructions.INC:
+                    human.INC();
                     break;
                 case Instruction.Instructions.DEC:
+                    human.DEC();
                     break;
                 case Instruction.Instructions.JMP:
-                    break;
+                    throw new System.NotImplementedException();
+                    //break;
                 case Instruction.Instructions.ERROR:
-                    break;
+                    throw new System.NotImplementedException();
+                    //break;
                 default:
                     break;
             }
-            yield return new WaitForSeconds(2);
+            yield return new WaitForSeconds(1);
         }
         Debug.Log("Execution Finished");
+        Check();
+    }
+
+    private void Execute()
+    {
+        Debug.Log("Starting");
+        Instruction.Instructions[] instructions = GameObject.Find("Main Camera").GetComponent<Correct>().GetCommands();
+        BoxElement[] inbox = GameObject.Find("Inbox").GetComponent<Inbox>().GetInbox();
+        int inboxIndex = 0;
+        int outboxIndex = 0;
+
+        for (int i = 0; i < instructions.Length; i++)
+        {
+            switch (instructions[i])
+            {
+                case Instruction.Instructions.INBOX:
+                    inHand = inbox[inboxIndex];
+                    inboxIndex++;
+                    break;
+                case Instruction.Instructions.OUTBOX:
+                    expected.Add(inHand.GetValue());
+                    outboxIndex++;
+                    break;
+                case Instruction.Instructions.ADD:
+                    throw new NotImplementedException();
+                    //break;
+                case Instruction.Instructions.SUB:
+                    throw new NotImplementedException();
+                    //break;
+                case Instruction.Instructions.INC:
+                    string val = inHand.GetValue();
+                    try
+                    {
+                        int intVal = Int32.Parse(val);
+                        intVal++;
+                        inHand.SetValue(intVal.ToString());
+                    }
+                    catch(FormatException)
+                    {
+                        Debug.LogError("Can't preform INC wit a non-num value in hand");
+                    }
+                    break;
+                case Instruction.Instructions.DEC:
+                    val = inHand.GetValue();
+                    try
+                    {
+                        int intVal = Int32.Parse(val);
+                        intVal--;
+                        inHand.SetValue(intVal.ToString());
+                    }
+                    catch (FormatException)
+                    {
+                        Debug.LogError("Can't preform DEC wit a non-num value in hand");
+                    }
+                    break;
+                case Instruction.Instructions.JMP:
+                    throw new NotImplementedException();
+                //break;
+                case Instruction.Instructions.ERROR:
+                    throw new NotImplementedException();
+                //break;
+                default:
+                    break;
+            }
+        }
+        Debug.Log("Generated keys");
+    }
+
+    private void Check()
+    {
+        string[] texts = new string[GameObject.Find("Outbox").transform.childCount];
+        if(texts.Length != expected.Count)
+        {
+            Debug.LogError("Supplied Text Does Not Mach The Specified One");
+            return;
+        }
+        for(int i=0;i< GameObject.Find("Outbox").transform.childCount; i++)
+        {
+            texts[i] = GameObject.Find("Outbox").transform.GetChild(i).GetComponent<Text>().text;
+        }
+
+        for(int i = 0; i < expected.Count; i++)
+        {
+            if(expected[i] != texts[i])
+            {
+                Debug.LogError("Supplied Text Does Not Mach The Specified One");
+                return;
+            }
+        }
+        Debug.Log("CORRECT");
+
     }
 }
