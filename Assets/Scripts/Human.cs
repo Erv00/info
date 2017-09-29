@@ -6,7 +6,27 @@ using UnityEngine.UI;
 
 public class Human : MonoBehaviour {
 
-    private BoxElement inHand = null;
+    private BoxElement InHand = null;
+    private Text inHandText;
+    private BoxElement inHand
+    {
+        get
+        {
+            return InHand;
+        }
+
+        set
+        {
+            if(value == null)
+            {
+                InHand = null;
+                inHandText.text = "";
+                return;
+            }
+            InHand = value;
+            inHandText.text = InHand.GetValue();
+        }
+    }
     private Transform Outbox;
     [SerializeField]
     private Transform InboxObj;
@@ -20,6 +40,7 @@ public class Human : MonoBehaviour {
         Outbox = GameObject.Find("Outbox").transform;
         InboxObj = GameObject.Find("Inbox").transform;
         InboxScr = InboxObj.gameObject.GetComponent<Inbox>();
+        inHandText = GetComponentInChildren<Text>();
     }
 
     public void ADD(int carpetIndex)
