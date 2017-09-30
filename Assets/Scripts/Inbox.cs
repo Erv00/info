@@ -1,9 +1,10 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using System.Collections.Generic;
 
 public class Inbox : MonoBehaviour {
 
-    private BoxElement[] inbox;
+    private List<BoxElement> inbox;
     [SerializeField]
     private GameObject Element = null;
     private int index = 0;
@@ -34,7 +35,7 @@ public class Inbox : MonoBehaviour {
         }
         PrintArray(inbox);
 
-        for(int i = 0; i < inbox.Length; i++)
+        for(int i = 0; i < inbox.Count; i++)
         {
             GameObject tmp = Instantiate(Element);
             tmp.GetComponent<Text>().text = inbox[i].GetValue();
@@ -49,12 +50,12 @@ public class Inbox : MonoBehaviour {
     #endregion
 
 
-    private BoxElement[] GenerateNumericInbox(int length,int min,int max)
+    private List<BoxElement> GenerateNumericInbox(int length,int min,int max)
     {
-        BoxElement[] tmp = new BoxElement[length];
+        List<BoxElement> tmp = new List<BoxElement>();
         for(int i = 0; i < length; i++)
         {
-            tmp[i] = new BoxElement(Random.Range(min, max + 1));
+            tmp.Add(new BoxElement(Random.Range(min, max + 1)));
         }
         //PrintArray(tmp);
         return(tmp);
@@ -62,34 +63,34 @@ public class Inbox : MonoBehaviour {
 
     private string[] alphabet = { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z" };
 
-    private BoxElement[] GenerateAlphabeticInbox(int length)
+    private List<BoxElement> GenerateAlphabeticInbox(int length)
     {
-        BoxElement[] tmp = new BoxElement[length];
+        List<BoxElement> tmp = new List<BoxElement>();
         for (int i = 0; i < length; i++)
         {
-            tmp[i] = new BoxElement(alphabet[Random.Range(1, 26 + 1)]);
+            tmp.Add(new BoxElement(alphabet[Random.Range(1, 26 + 1)]));
         }
         return tmp;
     }
 
-    private BoxElement[] GenerateAlphanumericInbox(int length,int min,int max)
+    private List<BoxElement> GenerateAlphanumericInbox(int length,int min,int max)
     {
-        BoxElement[] tmp = new BoxElement[length];
+        List<BoxElement> tmp = new List<BoxElement>();
         for (int i = 0; i < length; i++)
         {
             int x = Random.Range(min, max + 1 + 26);
             if (x > 26)
             {
-                tmp[i] = new BoxElement(x-26);
+                tmp.Add(new BoxElement(x-26));
                 continue;
             }else if (x < 0)
             {
-                tmp[i] = new BoxElement(x);
+                tmp.Add(new BoxElement(x));
                 continue;
             }
             else
             {
-                tmp[i] = new BoxElement(alphabet[Random.Range(1, 26 + 1)]);
+                tmp.Add(new BoxElement(alphabet[Random.Range(1, 26 + 1)]));
                 continue;
             }
         }
@@ -98,24 +99,37 @@ public class Inbox : MonoBehaviour {
 
     public BoxElement Next()
     {
+        PrintArray(inbox);
+        BoxElement tmp = inbox[index];
+        DebugInbox("After getting tmp from inbox");
         index++;
+        DebugInbox("After incrementing");
         Destroy(transform.GetChild(0).gameObject);
-        return inbox[index - 1];
+        Debug.Log("Returning " + tmp.GetValue());
+        return tmp;
     }
 
-    public BoxElement[] GetInbox()
+    public List<BoxElement> GetInbox()
     {
+        DebugInbox("Before giving inbox");
         return inbox;
     }
 
     #region debug
-    private void PrintArray(BoxElement[] arr)
+    private void PrintArray(List<BoxElement> arr)
     {
-        for(int i = 0; i < arr.Length; i++)
+        for(int i = 0; i < arr.Count; i++)
         {
             Debug.Log(arr[i].GetValue());
         }
     }
+
+    public void DebugInbox(string where)
+    {
+        Debug.LogWarning(where);
+        PrintArray(inbox);
+    }
+
     #endregion
 
 }

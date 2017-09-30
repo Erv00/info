@@ -65,6 +65,7 @@ public class Human : MonoBehaviour {
         {
             Debug.LogError("Can't preform INC with a non-number value");
         }
+        UpdateText();
     }
 
     public void DEC()
@@ -76,6 +77,7 @@ public class Human : MonoBehaviour {
         {
             Debug.LogError("Can't preform DEC with a non-number value");
         }
+        UpdateText();
     }
 
     public void OUTBOX()
@@ -89,5 +91,10 @@ public class Human : MonoBehaviour {
     public void INBOX()
     {
         inHand = InboxScr.Next();
+    }
+
+    private void UpdateText()
+    {
+        inHandText.text = InHand.GetValue();
     }
 }

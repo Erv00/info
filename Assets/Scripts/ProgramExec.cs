@@ -10,7 +10,18 @@ public class ProgramExec : MonoBehaviour {
     private Human human;
     private List<string> expected = new List<string>();
     [SerializeField]
-    BoxElement inHand = null;
+    BoxElement InHand = new BoxElement("");
+    private string inHand
+    {
+        set
+        {
+            InHand.SetValue(value);
+        }
+        get
+        {
+            return InHand.GetValue();
+        }
+    }
 
     void Start()
     {
@@ -82,22 +93,29 @@ public class ProgramExec : MonoBehaviour {
 
     private void Execute()
     {
+        GameObject.Find("Inbox").GetComponent<Inbox>().DebugInbox("Staring");
         Debug.Log("Starting");
         Instruction.Instructions[] instructions = GameObject.Find("Main Camera").GetComponent<Correct>().GetCommands();
-        BoxElement[] inbox = GameObject.Find("Inbox").GetComponent<Inbox>().GetInbox();
+        List<BoxElement> inbox = GameObject.Find("Inbox").GetComponent<Inbox>().GetInbox();
+        GameObject.Find("Inbox").GetComponent<Inbox>().DebugInbox("When got inbox");
         int inboxIndex = 0;
         int outboxIndex = 0;
 
         for (int i = 0; i < instructions.Length; i++)
         {
+            inbox = GameObject.Find("Inbox").GetComponent<Inbox>().GetInbox();
             switch (instructions[i])
             {
                 case Instruction.Instructions.INBOX:
-                    inHand = inbox[inboxIndex];
+                    GameObject.Find("Inbox").GetComponent<Inbox>().DebugInbox("Before inboxing");
+                    Debug.Log(inboxIndex);
+                    inHand = inbox[inboxIndex].GetValue();
+                    GameObject.Find("Inbox").GetComponent<Inbox>().DebugInbox("After Inboxing");
                     inboxIndex++;
+                    GameObject.Find("Inbox").GetComponent<Inbox>().DebugInbox("After Incrementing");
                     break;
                 case Instruction.Instructions.OUTBOX:
-                    expected.Add(inHand.GetValue());
+                    expected.Add(inHand);
                     outboxIndex++;
                     break;
                 case Instruction.Instructions.ADD:
@@ -107,12 +125,17 @@ public class ProgramExec : MonoBehaviour {
                     throw new NotImplementedException();
                     //break;
                 case Instruction.Instructions.INC:
-                    string val = inHand.GetValue();
+                    GameObject.Find("Inbox").GetComponent<Inbox>().DebugInbox("Strating inc");
+                    string val = inHand;
+                    GameObject.Find("Inbox").GetComponent<Inbox>().DebugInbox("Got value");
                     try
                     {
                         int intVal = Int32.Parse(val);
+                        GameObject.Find("Inbox").GetComponent<Inbox>().DebugInbox("Parsed hand value");
                         intVal++;
-                        inHand.SetValue(intVal.ToString());
+                        GameObject.Find("Inbox").GetComponent<Inbox>().DebugInbox("Incremented hand value");
+                        inHand = (intVal.ToString());
+                        GameObject.Find("Inbox").GetComponent<Inbox>().DebugInbox("Set hand value");
                     }
                     catch(FormatException)
                     {
@@ -120,12 +143,12 @@ public class ProgramExec : MonoBehaviour {
                     }
                     break;
                 case Instruction.Instructions.DEC:
-                    val = inHand.GetValue();
+                    val = inHand;
                     try
                     {
                         int intVal = Int32.Parse(val);
                         intVal--;
-                        inHand.SetValue(intVal.ToString());
+                        inHand = (intVal.ToString());
                     }
                     catch (FormatException)
                     {
@@ -143,6 +166,12 @@ public class ProgramExec : MonoBehaviour {
             }
         }
         Debug.Log("Generated keys");
+        Debug.Log("Printing Inbox");
+        GameObject.Find("Inbox").GetComponent<Inbox>().DebugInbox("When done");
+        foreach (string s in expected)
+        {
+            Debug.Log("EXPECT: " + s);
+        }
     }
 
     private void Check()
