@@ -3,13 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class ProgramExec : MonoBehaviour {
 
     GameObject[] instructingGameObjs;
     private Human human;
     private List<string> expected = new List<string>();
-    [SerializeField]
     BoxElement InHand = new BoxElement("");
     private string inHand
     {
@@ -170,6 +170,7 @@ public class ProgramExec : MonoBehaviour {
         if(texts.Length != expected.Count)
         {
             Debug.LogError("Supplied Text Does Not Mach The Specified One");
+            NotGood();
             return;
         }
         for(int i=0;i< GameObject.Find("Outbox").transform.childCount; i++)
@@ -182,10 +183,27 @@ public class ProgramExec : MonoBehaviour {
             if(expected[i] != texts[i])
             {
                 Debug.LogError("Supplied Text Does Not Mach The Specified One");
+                NotGood();
                 return;
             }
         }
         Debug.Log("CORRECT");
+        Good();
 
+    }
+
+    private void NotGood()
+    {
+        GameObject wrong = GameObject.Find("Wrong");
+        for(int i = 0; i < wrong.transform.childCount; i++)
+        {
+            wrong.transform.GetChild(i).gameObject.SetActive(true);
+        }
+        GameObject.Find("Check").GetComponent<Button>().interactable = false;
+    }
+
+    private void Good()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex+1);
     }
 }

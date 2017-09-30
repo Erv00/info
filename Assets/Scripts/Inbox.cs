@@ -21,6 +21,14 @@ public class Inbox : MonoBehaviour {
     #region basic
     // Use this for initialization
     void Awake () {
+        GenerateInbox();
+        PrintArray(inbox);
+
+
+    }
+
+    public void GenerateInbox()
+    {
         switch (Type)
         {
             case InboxType.NUMERIC:
@@ -33,14 +41,20 @@ public class Inbox : MonoBehaviour {
                 inbox = GenerateAlphanumericInbox(length, min, max);
                 break;
         }
-        PrintArray(inbox);
 
-        for(int i = 0; i < inbox.Count; i++)
+        for(int i = 0; i < gameObject.transform.childCount; i++)
+        {
+            gameObject.transform.GetChild(i).GetComponent<Destroy>().Kill();
+        }
+
+        for (int i = 0; i < inbox.Count; i++)
         {
             GameObject tmp = Instantiate(Element);
             tmp.GetComponent<Text>().text = inbox[i].GetValue();
             tmp.transform.SetParent(transform);
         }
+        Debug.Log("Generated new inbox");
+        PrintArray(inbox);
     }
 	
 	// Update is called once per frame
@@ -79,7 +93,8 @@ public class Inbox : MonoBehaviour {
         for (int i = 0; i < length; i++)
         {
             int x = Random.Range(min, max + 1 + 26);
-            if (x > 26)
+            Debug.Log("Got: " + x);
+            if (x >= 26)
             {
                 tmp.Add(new BoxElement(x-26));
                 continue;
@@ -90,7 +105,7 @@ public class Inbox : MonoBehaviour {
             }
             else
             {
-                tmp.Add(new BoxElement(alphabet[Random.Range(1, 26 + 1)]));
+                tmp.Add(new BoxElement(alphabet[x]));
                 continue;
             }
         }
