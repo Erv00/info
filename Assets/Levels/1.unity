@@ -361,6 +361,8 @@ MonoBehaviour:
   doReorder: 0
   isOver: 0
   beingDragged: {fileID: 0}
+  jmpCounter: 0
+  jmpHolder: {fileID: 0}
 --- !u!224 &339681217 stripped
 RectTransform:
   m_PrefabParentObject: {fileID: 224025906090279574, guid: 21fb7c3bce680364baa1f66aed50ace4,
@@ -685,7 +687,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 24.049988, y: 28.100021}
+  m_AnchoredPosition: {x: -20.950012, y: 28.050003}
   m_SizeDelta: {x: 208.1, y: 56.1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &602166470
@@ -849,6 +851,7 @@ GameObject:
   - component: {fileID: 868671414}
   - component: {fileID: 868671413}
   - component: {fileID: 868671412}
+  - component: {fileID: 868671415}
   m_Layer: 5
   m_Name: Outbox
   m_TagString: Untagged
@@ -929,6 +932,17 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 868671410}
+--- !u!114 &868671415
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 868671410}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b0526b5ebc18f64d86e5d50852809e1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1073800487
 Prefab:
   m_ObjectHideFlags: 0
@@ -1480,7 +1494,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 94a3318be963c234e880b556833bc445, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  correctCommands: 00000000010000000000000001000000000000000100000000000000010000000000000001000000
+  correctCommands:
+  - 0
+  - INBOX
+  - OUTBOX
+  - JMP
+  - 0
 --- !u!1 &1777788267
 GameObject:
   m_ObjectHideFlags: 0
@@ -1903,6 +1922,8 @@ MonoBehaviour:
   doReorder: 1
   isOver: 0
   beingDragged: {fileID: 0}
+  jmpCounter: 0
+  jmpHolder: {fileID: 0}
 --- !u!114 &2111698103
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -60,7 +60,12 @@ public class ProgramExec : MonoBehaviour {
             switch (inst.Type)
             {
                 case Instruction.Instructions.INBOX:
-                    human.INBOX();
+                    if (!human.INBOX())
+                    {
+                        Debug.Log("Should Stop");
+                        Check();
+                        yield break;
+                    }
                     break;
                 case Instruction.Instructions.OUTBOX:
                     human.OUTBOX();
@@ -77,12 +82,13 @@ public class ProgramExec : MonoBehaviour {
                     human.DEC();
                     break;
                 case Instruction.Instructions.JMP:
-                    throw new System.NotImplementedException();
-                    //break;
+                    i = human.JMP(inst);
+                    break;
                 case Instruction.Instructions.ERROR:
                     throw new System.NotImplementedException();
                     //break;
                 default:
+                    Debug.LogWarning("This my be a problem");
                     break;
             }
             yield return new WaitForSeconds(1);
@@ -96,6 +102,7 @@ public class ProgramExec : MonoBehaviour {
         Debug.Log("Starting");
         Instruction.Instructions[] instructions = GameObject.Find("Main Camera").GetComponent<Correct>().GetCommands();
         List<BoxElement> inbox = GameObject.Find("Inbox").GetComponent<Inbox>().GetInbox();
+        Dictionary<int, int> labels = GameObject.Find("Main Camera").GetComponent<Correct>().GetLabels();
         int inboxIndex = 0;
         int outboxIndex = 0;
 
@@ -106,7 +113,15 @@ public class ProgramExec : MonoBehaviour {
             {
                 case Instruction.Instructions.INBOX:
                     Debug.Log(inboxIndex);
-                    inHand = inbox[inboxIndex].GetValue();
+                    try
+                    {
+                        inHand = inbox[inboxIndex].GetValue();
+                    }
+                    catch (ArgumentOutOfRangeException)
+                    {
+                        Debug.LogWarning("No more elements in inbox");
+                        return;
+                    }
                     inboxIndex++;
                     break;
                 case Instruction.Instructions.OUTBOX:
@@ -146,8 +161,8 @@ public class ProgramExec : MonoBehaviour {
                     }
                     break;
                 case Instruction.Instructions.JMP:
-                    throw new NotImplementedException();
-                //break;
+                    i = labels[i];
+                    break;
                 case Instruction.Instructions.ERROR:
                     throw new NotImplementedException();
                 //break;
@@ -156,12 +171,6 @@ public class ProgramExec : MonoBehaviour {
             }
         }
         Debug.Log("Generated keys");
-        Debug.Log("Printing Inbox");
-        GameObject.Find("Inbox").GetComponent<Inbox>().DebugInbox("When done");
-        foreach (string s in expected)
-        {
-            Debug.Log("EXPECT: " + s);
-        }
     }
 
     private void Check()
@@ -182,6 +191,8 @@ public class ProgramExec : MonoBehaviour {
         {
             if(expected[i] != texts[i])
             {
+                Debug.Log("Expected: " + ArrToStr(expected));
+                Debug.Log("Got: " + ArrToStr(texts));
                 Debug.LogError("Supplied Text Does Not Mach The Specified One");
                 NotGood();
                 return;
@@ -204,6 +215,36 @@ public class ProgramExec : MonoBehaviour {
 
     private void Good()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex+1);
+        if (SceneManager.GetActiveScene().buildIndex + 1 <= SceneManager.sceneCountInBuildSettings - 1)
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        }
+        else
+        {
+            SceneManager.LoadScene(0);
+        }
+    }
+
+    private string ArrToStr(List<string> strArr)
+    {
+        string tempo = "";
+
+        foreach(string s in strArr)
+        {
+            tempo += s;
+            tempo += "      ";
+        }
+        return tempo;
+    }
+    private string ArrToStr(string[] strArr)
+    {
+        string tempo = "";
+
+        foreach (string s in strArr)
+        {
+            tempo += s;
+            tempo += "      ";
+        }
+        return tempo;
     }
 }

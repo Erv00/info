@@ -7,7 +7,7 @@ public class DropZone : MonoBehaviour,IDropHandler,IPointerEnterHandler,IPointer
 #region basic
     // Use this for initialization
     void Start () {
-		
+        jmpHolder = GameObject.Find("JMPH");
 	}
 	
 	// Update is called once per frame
@@ -37,6 +37,10 @@ public class DropZone : MonoBehaviour,IDropHandler,IPointerEnterHandler,IPointer
     private bool isOver = false;
     [SerializeField]
     private GameObject beingDragged = null;
+    [SerializeField]
+    private int jmpCounter = 0;
+    [SerializeField]
+    private GameObject jmpHolder;
 
     public void OnDrop(PointerEventData data)
     {
@@ -49,7 +53,18 @@ public class DropZone : MonoBehaviour,IDropHandler,IPointerEnterHandler,IPointer
             return;
         }
 
-
+        if(data.pointerDrag.GetComponent<Instruction>().Type == Instruction.Instructions.JMP)
+        {
+            GameObject jmpH = Instantiate(jmpHolder);
+            jmpH.GetComponent<Text>().text = jmpCounter.ToString();
+            data.pointerDrag.GetComponent<Text>().text += jmpCounter.ToString();
+            jmpH.GetComponent<Draggable>().SetClone();
+            jmpH.GetComponent<Instruction>().pair = data.pointerDrag;
+            data.pointerDrag.GetComponent<Instruction>().pair = jmpH;
+            jmpCounter++;
+            jmpH.transform.SetParent(transform);
+            jmpH.transform.SetSiblingIndex(tmp.transform.GetSiblingIndex());
+        }
         
         data.pointerDrag.GetComponent<Draggable>().validDrop = true;
         data.pointerDrag.GetComponent<Draggable>().parentToReturn = transform;

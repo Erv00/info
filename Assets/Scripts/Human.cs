@@ -88,9 +88,21 @@ public class Human : MonoBehaviour {
         inHand = null;
     }
 
-    public void INBOX()
+    public bool INBOX()
     {
-        inHand = InboxScr.Next();
+        BoxElement temp = InboxScr.Next();
+        if(temp != null)
+        {
+            inHand = temp;
+            return true;
+        }
+        return false;
+    }
+
+    public int JMP(Instruction ins)
+    {
+        GameObject pair = ins.pair;
+        return pair.transform.GetSiblingIndex();
     }
 
     private void UpdateText()

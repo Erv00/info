@@ -69,6 +69,10 @@ public class Draggable : MonoBehaviour, IBeginDragHandler,IDragHandler,IEndDragH
 
     private void Delete()
     {
+        if(GetComponent<Instruction>().Type == Instruction.Instructions.PLACEHOLDER || GetComponent<Instruction>().Type == Instruction.Instructions.JMP)
+        {
+            DestroyObject(GetComponent<Instruction>().pair);
+        }
         Destroy(gameObject);
     }
 

@@ -22,9 +22,6 @@ public class Inbox : MonoBehaviour {
     // Use this for initialization
     void Awake () {
         GenerateInbox();
-        PrintArray(inbox);
-
-
     }
 
     public void GenerateInbox()
@@ -54,7 +51,7 @@ public class Inbox : MonoBehaviour {
             tmp.transform.SetParent(transform);
         }
         Debug.Log("Generated new inbox");
-        PrintArray(inbox);
+        GameObject.Find("Outbox").GetComponent<FlushBox>().Flush();
     }
 	
 	// Update is called once per frame
@@ -114,19 +111,27 @@ public class Inbox : MonoBehaviour {
 
     public BoxElement Next()
     {
-        PrintArray(inbox);
-        BoxElement tmp = inbox[index];
-        DebugInbox("After getting tmp from inbox");
-        index++;
-        DebugInbox("After incrementing");
-        Destroy(transform.GetChild(0).gameObject);
-        Debug.Log("Returning " + tmp.GetValue());
+        BoxElement tmp = null;
+        try
+        {
+            tmp = inbox[index];
+            index++;
+            Destroy(transform.GetChild(0).gameObject);
+        }
+        catch (System.ArgumentOutOfRangeException)
+        {
+            Debug.LogWarning("No more items in inbox");
+            return null;
+        }
+        catch (UnityException)
+        {
+            Debug.LogError("No more children");
+        }
         return tmp;
     }
 
     public List<BoxElement> GetInbox()
     {
-        DebugInbox("Before giving inbox");
         return inbox;
     }
 
