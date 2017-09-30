@@ -93,11 +93,9 @@ public class ProgramExec : MonoBehaviour {
 
     private void Execute()
     {
-        GameObject.Find("Inbox").GetComponent<Inbox>().DebugInbox("Staring");
         Debug.Log("Starting");
         Instruction.Instructions[] instructions = GameObject.Find("Main Camera").GetComponent<Correct>().GetCommands();
         List<BoxElement> inbox = GameObject.Find("Inbox").GetComponent<Inbox>().GetInbox();
-        GameObject.Find("Inbox").GetComponent<Inbox>().DebugInbox("When got inbox");
         int inboxIndex = 0;
         int outboxIndex = 0;
 
@@ -107,12 +105,9 @@ public class ProgramExec : MonoBehaviour {
             switch (instructions[i])
             {
                 case Instruction.Instructions.INBOX:
-                    GameObject.Find("Inbox").GetComponent<Inbox>().DebugInbox("Before inboxing");
                     Debug.Log(inboxIndex);
                     inHand = inbox[inboxIndex].GetValue();
-                    GameObject.Find("Inbox").GetComponent<Inbox>().DebugInbox("After Inboxing");
                     inboxIndex++;
-                    GameObject.Find("Inbox").GetComponent<Inbox>().DebugInbox("After Incrementing");
                     break;
                 case Instruction.Instructions.OUTBOX:
                     expected.Add(inHand);
@@ -125,17 +120,12 @@ public class ProgramExec : MonoBehaviour {
                     throw new NotImplementedException();
                     //break;
                 case Instruction.Instructions.INC:
-                    GameObject.Find("Inbox").GetComponent<Inbox>().DebugInbox("Strating inc");
                     string val = inHand;
-                    GameObject.Find("Inbox").GetComponent<Inbox>().DebugInbox("Got value");
                     try
                     {
                         int intVal = Int32.Parse(val);
-                        GameObject.Find("Inbox").GetComponent<Inbox>().DebugInbox("Parsed hand value");
                         intVal++;
-                        GameObject.Find("Inbox").GetComponent<Inbox>().DebugInbox("Incremented hand value");
                         inHand = (intVal.ToString());
-                        GameObject.Find("Inbox").GetComponent<Inbox>().DebugInbox("Set hand value");
                     }
                     catch(FormatException)
                     {
