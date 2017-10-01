@@ -52,6 +52,53 @@ public class Correct : MonoBehaviour {
                         Debug.LogError("This key already exists");
                     }
                     break;
+                case "COPYFROM":
+                    tmp[i] = Instruction.Instructions.COPYFROM;
+                    try
+                    {
+                        labels.Add(i, Int32.Parse(correctCommands[i + 1]));
+                    }
+                    catch (FormatException)
+                    {
+                        Debug.LogError("After copyfrom there should be a carpet identifier");
+                    }
+                    catch (ArgumentException)
+                    {
+                        Debug.LogError("This key already exists");
+                    }
+                    break;
+                case "ADD":
+                    tmp[i] = Instruction.Instructions.ADD;
+                    try
+                    {
+                        labels.Add(i, Int32.Parse(correctCommands[i + 1]));
+                        Debug.Log("Added key" + i);
+                    }
+                    catch (FormatException)
+                    {
+                        Debug.LogError("After add there should be a carpet identifier");
+                    }
+                    catch (ArgumentException)
+                    {
+                        Debug.LogError("This key already exists");
+                    }
+                    break;
+                case "JMPZ":
+                    tmp[i] = Instruction.Instructions.JMPZ;
+                    try
+                    {
+                        labels.Add(i, Int32.Parse(correctCommands[i + 1]));
+                        Debug.Log("Added key" + i);
+                    }
+                    catch (FormatException)
+                    {
+                        Debug.LogError("After add there should be a carpet identifier");
+                    }
+                    catch (ArgumentException)
+                    {
+                        Debug.LogError("This key already exists");
+                    }
+                    break;
                 default:
                     Debug.LogWarning("Correct commands line " + i + "is not a command");
                     tmp[i] = Instruction.Instructions.PLACEHOLDER;

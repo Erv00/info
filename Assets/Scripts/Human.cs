@@ -43,11 +43,6 @@ public class Human : MonoBehaviour {
         inHandText = GetComponentInChildren<Text>();
     }
 
-    public void ADD(int carpetIndex)
-    {
-        throw new System.NotImplementedException();
-    }
-
     public void SUB(int carpetIndex)
     {
         throw new System.NotImplementedException();
@@ -83,7 +78,13 @@ public class Human : MonoBehaviour {
     public void OUTBOX()
     {
         GameObject tmp = Instantiate(Element);
-        tmp.GetComponent<Text>().text = inHand.GetValue();
+        try
+        {
+            tmp.GetComponent<Text>().text = inHand.GetValue();
+        }catch (NullReferenceException)
+        {
+            Debug.LogError("Can't prefor OUTBOX with empty hand");
+        }
         tmp.transform.SetParent(Outbox);
         inHand = null;
     }
@@ -105,6 +106,16 @@ public class Human : MonoBehaviour {
         return pair.transform.GetSiblingIndex();
     }
 
+    public int JMPZ(Instruction ins)
+    {
+        if (inHand.GetValue() == "0")
+        {
+            GameObject pair = ins.pair;
+            return pair.transform.GetSiblingIndex();
+        }
+        return -1;
+    }
+
     public void COPYTO(int carpetID,Dictionary<int,Carpet> carpets)
     {
         Carpet car = carpets[carpetID];
@@ -115,6 +126,22 @@ public class Human : MonoBehaviour {
     {
         Carpet car = carpets[carpetID];
         inHand = new BoxElement(car.OnCarpet);
+    }
+
+    public void ADD(int carpetID,Dictionary<int,Carpet> carpets)
+    {
+        Carpet car = carpets[carpetID];
+        try
+        {
+            int handVal = Int32.Parse(inHand.GetValue());
+            int carpetVal = Int32.Parse(car.OnCarpet);
+            inHand = new BoxElement(handVal + carpetVal);
+        }
+        catch
+        {
+            Debug.LogError("The supplied values are not numbers");
+        }
+
     }
 
     private void UpdateText()

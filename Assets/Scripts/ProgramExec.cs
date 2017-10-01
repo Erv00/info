@@ -16,6 +16,7 @@ public class ProgramExec : MonoBehaviour {
         set
         {
             InHand.SetValue(value);
+            Debug.Log("MODIFIED");
         }
         get
         {
@@ -23,7 +24,7 @@ public class ProgramExec : MonoBehaviour {
         }
     }
     public bool STOP = false;
-    public Dictionary<int, Carpet> carpets = new Dictionary<int, Carpet>();
+    public static Dictionary<int, Carpet> carpets = new Dictionary<int, Carpet>();
     Dictionary<int, int> labels = new Dictionary<int, int>();
 
     void Start()
@@ -77,8 +78,8 @@ public class ProgramExec : MonoBehaviour {
                     human.OUTBOX();
                     break;
                 case Instruction.Instructions.ADD:
-                    throw new System.NotImplementedException();
-                    //break;
+                    human.ADD(inst.index, carpets);
+                    break;
                 case Instruction.Instructions.SUB:
                     break;
                 case Instruction.Instructions.INC:
@@ -90,11 +91,18 @@ public class ProgramExec : MonoBehaviour {
                 case Instruction.Instructions.JMP:
                     i = human.JMP(inst);
                     break;
+                case Instruction.Instructions.JMPZ:
+                    i = human.JMPZ(inst);
+                    break;
                 case Instruction.Instructions.ERROR:
                     Debug.LogError("This shold not happen");
                     break;
                 case Instruction.Instructions.COPYTO:
-                    human.COPYTO(labels[, carpets);
+                    human.COPYTO(inst.index, carpets);
+                    break;
+                case Instruction.Instructions.COPYFROM:
+                    human.COPYFROM(inst.index, carpets);
+                    break;
                 default:
                     Debug.LogWarning("This my be a problem");
                     break;
@@ -113,15 +121,14 @@ public class ProgramExec : MonoBehaviour {
         List<BoxElement> inbox = GameObject.Find("Inbox").GetComponent<Inbox>().GetInbox();
         labels = GameObject.Find("Main Camera").GetComponent<Correct>().GetLabels();
         int inboxIndex = 0;
-        int outboxIndex = 0;
 
+        Carpet car;
         for (int i = 0; i < instructions.Length; i++)
         {
             inbox = GameObject.Find("Inbox").GetComponent<Inbox>().GetInbox();
             switch (instructions[i])
             {
                 case Instruction.Instructions.INBOX:
-                    Debug.Log(inboxIndex);
                     try
                     {
                         inHand = inbox[inboxIndex].GetValue();
@@ -136,12 +143,24 @@ public class ProgramExec : MonoBehaviour {
                     inboxIndex++;
                     break;
                 case Instruction.Instructions.OUTBOX:
+                    Debug.Log("OUTBOX");
                     expected.Add(inHand);
-                    outboxIndex++;
                     break;
                 case Instruction.Instructions.ADD:
-                    throw new NotImplementedException();
-                    //break;
+                    int x = labels[i];
+                    Debug.Log("Trying " + i);
+                    car = carpets[x];
+                    try
+                    {
+                        int handVal = Int32.Parse(inHand);
+                        int carpetVal = Int32.Parse(car.OnCarpet);
+                        inHand = (handVal + carpetVal).ToString();
+                    }
+                    catch (FormatException)
+                    {
+                        Debug.LogError("The supplied values are not numbers");
+                    }
+                    break;
                 case Instruction.Instructions.SUB:
                     throw new NotImplementedException();
                     //break;
@@ -174,16 +193,21 @@ public class ProgramExec : MonoBehaviour {
                 case Instruction.Instructions.JMP:
                     i = labels[i];
                     break;
-                case Instruction.Instructions.ERROR:
-                    throw new NotImplementedException();
-                //break;
                 case Instruction.Instructions.COPYTO:
-                    Carpet car = carpets[i];
+                    int xx = labels[i];
+                    car = carpets[xx];
                     car.OnCarpet = inHand;
                     break;
                 case Instruction.Instructions.COPYFROM:
-                    car = carpets[i];
+                    car = carpets[labels[i]];
                     inHand = car.OnCarpet;
+                    break;
+                case Instruction.Instructions.JMPZ:
+                    if(inHand == "0")
+                    {
+                        Debug.Log("JUMPING TO " + labels[i]);
+                        i = labels[i];
+                    }
                     break;
                 default:
                     break;

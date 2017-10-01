@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
@@ -41,6 +42,7 @@ public class DropZone : MonoBehaviour,IDropHandler,IPointerEnterHandler,IPointer
     private int jmpCounter = 0;
     [SerializeField]
     private GameObject jmpHolder;
+    private Instruction toSet;
 
     public void OnDrop(PointerEventData data)
     {
@@ -53,7 +55,7 @@ public class DropZone : MonoBehaviour,IDropHandler,IPointerEnterHandler,IPointer
             return;
         }
 
-        if(data.pointerDrag.GetComponent<Instruction>().Type == Instruction.Instructions.JMP && data.pointerDrag.GetComponent<Instruction>().pair ==null)
+        if((data.pointerDrag.GetComponent<Instruction>().Type == Instruction.Instructions.JMP && data.pointerDrag.GetComponent<Instruction>().pair ==null) || (data.pointerDrag.GetComponent<Instruction>().Type == Instruction.Instructions.JMPZ && data.pointerDrag.GetComponent<Instruction>().pair == null))
         {
             GameObject jmpH = Instantiate(jmpHolder);
             jmpH.GetComponent<Text>().text = jmpCounter.ToString();
@@ -64,6 +66,11 @@ public class DropZone : MonoBehaviour,IDropHandler,IPointerEnterHandler,IPointer
             jmpCounter++;
             jmpH.transform.SetParent(transform);
             jmpH.transform.SetSiblingIndex(tmp.transform.GetSiblingIndex());
+        }
+        if(data.pointerDrag.GetComponent<Instruction>().Type == Instruction.Instructions.COPYTO || data.pointerDrag.GetComponent<Instruction>().Type == Instruction.Instructions.COPYFROM || data.pointerDrag.GetComponent<Instruction>().Type == Instruction.Instructions.ADD)
+        {
+            GameObject.Find("Ask").transform.GetChild(0).gameObject.SetActive(true);
+            toSet = data.pointerDrag.GetComponent<Instruction>();
         }
         
         data.pointerDrag.GetComponent<Draggable>().validDrop = true;
@@ -105,6 +112,30 @@ public class DropZone : MonoBehaviour,IDropHandler,IPointerEnterHandler,IPointer
         if(doReorder && eventData.dragging)
         {
             Destroy(tmp);
+        }
+    }
+
+    public void OnEndEdit(string str)
+    {
+        try
+        {
+            toSet.index = System.Int32.Parse(str);
+            if (!toSet.GetComponent<Instruction>().wasSet)
+            {
+                toSet.gameObject.GetComponent<Text>().text += " " + str;
+                toSet.GetComponent<Instruction>().wasSet = true;
+            }
+            else
+            {
+                string current = toSet.gameObject.GetComponent<Text>().text;
+                string baseName = current.Substring(0,current.Length - 2);
+                toSet.gameObject.GetComponent<Text>().text = baseName + " " + str;
+            }
+            GameObject.Find("Question").SetActive(false);
+        }
+        catch (System.FormatException)
+        {
+            Debug.LogError("The entert string is not a number");
         }
     }
 }
