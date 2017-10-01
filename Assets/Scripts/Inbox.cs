@@ -7,7 +7,7 @@ public class Inbox : MonoBehaviour {
     private List<BoxElement> inbox;
     [SerializeField]
     private GameObject Element = null;
-    private int index = 0;
+    public int index = 0;
     public enum InboxType { NUMERIC,ALPHABETIC,ALPHANUMERIC};
     [SerializeField]
     private InboxType Type = InboxType.NUMERIC;
@@ -120,7 +120,7 @@ public class Inbox : MonoBehaviour {
         }
         catch (System.ArgumentOutOfRangeException)
         {
-            Debug.LogWarning("No more items in inbox");
+            Debug.Log("No more items in inbox");
             return null;
         }
         catch (UnityException)

@@ -105,6 +105,18 @@ public class Human : MonoBehaviour {
         return pair.transform.GetSiblingIndex();
     }
 
+    public void COPYTO(int carpetID,Dictionary<int,Carpet> carpets)
+    {
+        Carpet car = carpets[carpetID];
+        car.OnCarpet = inHand.GetValue();
+    }
+
+    public void COPYFROM(int carpetID, Dictionary<int, Carpet> carpets)
+    {
+        Carpet car = carpets[carpetID];
+        inHand = new BoxElement(car.OnCarpet);
+    }
+
     private void UpdateText()
     {
         inHandText.text = InHand.GetValue();

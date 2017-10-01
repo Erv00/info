@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Instruction : MonoBehaviour {
 
-	public enum Instructions { INBOX,OUTBOX,ADD,SUB,INC,DEC,JMP,ERROR,PLACEHOLDER}
+	public enum Instructions { INBOX,OUTBOX,ADD,SUB,INC,DEC,JMP,ERROR,PLACEHOLDER,COPYTO,COPYFROM}
     [SerializeField]
     Instructions type = Instructions.ERROR;
     public GameObject pair;

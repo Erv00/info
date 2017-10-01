@@ -47,13 +47,13 @@ public class DropZone : MonoBehaviour,IDropHandler,IPointerEnterHandler,IPointer
         //Preform checking
         if(Type == ZoneType.Delete)
         {
-            Destroy(data.pointerDrag.gameObject);
+            data.pointerDrag.GetComponent<Draggable>().Delete();
             beingDragged = null;
             isOver = false;
             return;
         }
 
-        if(data.pointerDrag.GetComponent<Instruction>().Type == Instruction.Instructions.JMP)
+        if(data.pointerDrag.GetComponent<Instruction>().Type == Instruction.Instructions.JMP && data.pointerDrag.GetComponent<Instruction>().pair ==null)
         {
             GameObject jmpH = Instantiate(jmpHolder);
             jmpH.GetComponent<Text>().text = jmpCounter.ToString();

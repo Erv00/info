@@ -22,10 +22,17 @@ public class ProgramExec : MonoBehaviour {
             return InHand.GetValue();
         }
     }
+    public bool STOP = false;
+    public Dictionary<int, Carpet> carpets = new Dictionary<int, Carpet>();
+    Dictionary<int, int> labels = new Dictionary<int, int>();
 
     void Start()
     {
         human = GameObject.Find("Man").GetComponent<Human>();
+    }
+    void Update()
+    {
+        ShouldStop();
     }
 
     public void Ready()
@@ -62,7 +69,6 @@ public class ProgramExec : MonoBehaviour {
                 case Instruction.Instructions.INBOX:
                     if (!human.INBOX())
                     {
-                        Debug.Log("Should Stop");
                         Check();
                         yield break;
                     }
@@ -85,8 +91,10 @@ public class ProgramExec : MonoBehaviour {
                     i = human.JMP(inst);
                     break;
                 case Instruction.Instructions.ERROR:
-                    throw new System.NotImplementedException();
-                    //break;
+                    Debug.LogError("This shold not happen");
+                    break;
+                case Instruction.Instructions.COPYTO:
+                    human.COPYTO(labels[, carpets);
                 default:
                     Debug.LogWarning("This my be a problem");
                     break;
@@ -100,9 +108,10 @@ public class ProgramExec : MonoBehaviour {
     private void Execute()
     {
         Debug.Log("Starting");
+        expected = new List<string>();
         Instruction.Instructions[] instructions = GameObject.Find("Main Camera").GetComponent<Correct>().GetCommands();
         List<BoxElement> inbox = GameObject.Find("Inbox").GetComponent<Inbox>().GetInbox();
-        Dictionary<int, int> labels = GameObject.Find("Main Camera").GetComponent<Correct>().GetLabels();
+        labels = GameObject.Find("Main Camera").GetComponent<Correct>().GetLabels();
         int inboxIndex = 0;
         int outboxIndex = 0;
 
@@ -119,7 +128,9 @@ public class ProgramExec : MonoBehaviour {
                     }
                     catch (ArgumentOutOfRangeException)
                     {
-                        Debug.LogWarning("No more elements in inbox");
+                        Debug.Log("No more elements in inbox");
+                        Debug.Log("Generated expected2");
+                        Debug.Log("Expected2: " + ArrToStr(expected));
                         return;
                     }
                     inboxIndex++;
@@ -166,6 +177,14 @@ public class ProgramExec : MonoBehaviour {
                 case Instruction.Instructions.ERROR:
                     throw new NotImplementedException();
                 //break;
+                case Instruction.Instructions.COPYTO:
+                    Carpet car = carpets[i];
+                    car.OnCarpet = inHand;
+                    break;
+                case Instruction.Instructions.COPYFROM:
+                    car = carpets[i];
+                    inHand = car.OnCarpet;
+                    break;
                 default:
                     break;
             }
@@ -178,7 +197,9 @@ public class ProgramExec : MonoBehaviour {
         string[] texts = new string[GameObject.Find("Outbox").transform.childCount];
         if(texts.Length != expected.Count)
         {
-            Debug.LogError("Supplied Text Does Not Mach The Specified One");
+            Debug.Log("Expected: " + ArrToStr(expected));
+            Debug.Log("Got: " + ArrToStr(texts));
+            Debug.LogError("Supplied Text Is Not As Long As Expected");
             NotGood();
             return;
         }
@@ -186,8 +207,10 @@ public class ProgramExec : MonoBehaviour {
         {
             texts[i] = GameObject.Find("Outbox").transform.GetChild(i).GetComponent<Text>().text;
         }
+        Debug.Log("Expected: " + ArrToStr(expected));
+        Debug.Log("Got: " + ArrToStr(texts));
 
-        for(int i = 0; i < expected.Count; i++)
+        for (int i = 0; i < expected.Count; i++)
         {
             if(expected[i] != texts[i])
             {
@@ -205,6 +228,7 @@ public class ProgramExec : MonoBehaviour {
 
     private void NotGood()
     {
+        GameObject.Find("Inbox").GetComponent<Inbox>().index = 0;
         GameObject wrong = GameObject.Find("Wrong");
         for(int i = 0; i < wrong.transform.childCount; i++)
         {
@@ -246,5 +270,14 @@ public class ProgramExec : MonoBehaviour {
             tempo += "      ";
         }
         return tempo;
+    }
+
+    private void ShouldStop()
+    {
+        if (STOP)
+        {
+            StopCoroutine(StandartExecute());
+            Check();
+        }
     }
 }

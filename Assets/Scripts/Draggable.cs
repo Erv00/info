@@ -67,7 +67,7 @@ public class Draggable : MonoBehaviour, IBeginDragHandler,IDragHandler,IEndDragH
         }
     }
 
-    private void Delete()
+    public void Delete()
     {
         if(GetComponent<Instruction>().Type == Instruction.Instructions.PLACEHOLDER || GetComponent<Instruction>().Type == Instruction.Instructions.JMP)
         {

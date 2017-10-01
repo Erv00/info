@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -11,8 +10,9 @@ public class Correct : MonoBehaviour {
     public Instruction.Instructions[] GetCommands()
     {
         Instruction.Instructions[] tmp = new Instruction.Instructions[correctCommands.Length];
+        labels = new Dictionary<int, int>();
 
-        for(int i=0;i<correctCommands.Length;i++)
+        for (int i=0;i<correctCommands.Length;i++)
         {
             string s = correctCommands[i];
             switch (s)
@@ -35,6 +35,21 @@ public class Correct : MonoBehaviour {
                     catch (FormatException)
                     {
                         Debug.LogError("After jump instruction there should be a number as a label");
+                    }
+                    break;
+                case "COPYTO":
+                    tmp[i] = Instruction.Instructions.COPYTO;
+                    try
+                    {
+                        labels.Add(i, Int32.Parse(correctCommands[i + 1]));
+                    }
+                    catch (FormatException)
+                    {
+                        Debug.LogError("After copyto there should be a carpet identifier");
+                    }
+                    catch (ArgumentException)
+                    {
+                        Debug.LogError("This key already exists");
                     }
                     break;
                 default:
